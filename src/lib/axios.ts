@@ -3,6 +3,10 @@ import axios from "axios";
 
 export const axiosInstance = axios.create({
   baseURL: config.baseUrl,
+  withCredentials: true,
+  headers : {
+    'Authorization': "hudai akta token"
+  }
 });
 
 // Add a request interceptor
