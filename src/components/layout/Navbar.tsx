@@ -27,10 +27,15 @@ const navigationLinks = [
 ];
 
 export default function Navbar() {
-  const { data } = useUserInfoQuery(undefined);
+  const { data, isLoading, isFetching } = useUserInfoQuery(undefined);
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
-  console.log(data?.data?.email);
+
+  if (isLoading || isFetching) {
+    return <p>Loading...</p>;
+  }
+
+  console.log("data.data.email = ", data?.data?.email);
 
   const handleLogout = async () => {
     await logout(undefined);
