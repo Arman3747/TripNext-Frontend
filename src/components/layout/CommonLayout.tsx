@@ -1,19 +1,17 @@
-import React, { type ReactNode } from "react";
 import Navbar from "./Navbar";
 import { Footer } from "./Footer";
+import type { ReactNode } from "react";
 
-const CommonLayout = ({ children }: { children: ReactNode }) => {
+interface IProps {
+  children: ReactNode;
+}
+
+export default function CommonLayout({ children }: IProps) {
   return (
-    <div className="flex flex-col gap-4 min-h-screen">
-      <div>
-        <Navbar></Navbar>
-      </div>
-      <div className="flex-1">{children}</div>
-      <div>
-        <Footer></Footer>
-      </div>
+    <div className=" min-h-screen flex flex-col">
+      <Navbar />
+      <div className="grow-1">{children}</div>
+      <Footer />
     </div>
   );
-};
-
-export default CommonLayout;
+}
