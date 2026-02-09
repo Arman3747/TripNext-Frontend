@@ -1,3 +1,4 @@
+import DeleteConfirmation from "@/components/DeleteConfirmation";
 import AddTourModal from "@/components/modules/Admin/TourType/AddTourModal";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,11 +9,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetTourTypesQuery } from "@/redux/features/Tour/tour.api";
+import {
+  useGetTourTypesQuery,
+  useRemoveTourTypeMutation,
+} from "@/redux/features/Tour/tour.api";
 import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 const AddTourType = () => {
   const { data } = useGetTourTypesQuery(undefined);
+
+  const [removeTourType] = useRemoveTourTypeMutation();
+
+  const handleRemoveTourType = async (tourId: string) => {
+    const toastId = toast.loading("Removing...");
+
+    try {
+      const res = await removeTourType(tourId).unwrap();
+      if (res.success) {
+        toast.success("Removed", { id: toastId });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   console.log(data);
 
@@ -32,15 +52,21 @@ const AddTourType = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.map((item: { name: string }, index: number) => (
+            {data?.map((item: { _id: string; name: string }, index: number) => (
               <TableRow key={index}>
                 <TableCell className="font-medium w-full">
                   {item?.name}
                 </TableCell>
                 <TableCell className="font-medium text-right">
-                  <Button>
-                    <Trash2></Trash2>
-                  </Button>
+                  <DeleteConfirmation
+                    onConfirm={() => {
+                      handleRemoveTourType(item._id);
+                    }}
+                  >
+                    <Button>
+                      <Trash2></Trash2>
+                    </Button>
+                  </DeleteConfirmation>
                 </TableCell>
               </TableRow>
             ))}
